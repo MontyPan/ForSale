@@ -1,5 +1,6 @@
 package us.dontcareabout.forSale.client.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameData {
@@ -9,7 +10,7 @@ public class GameData {
 	public final boolean floorMode;
 
 	private final Player[] players;
-	private final int[] pool;
+	private final ArrayList<Integer> pool = new ArrayList<>();
 
 	private int nowPrice;
 	private int nowPlayer;
@@ -22,11 +23,32 @@ public class GameData {
 		this.floorMode = floorMode;
 		int playerAmount = nameList.size();
 		players = new Player[playerAmount];
-		pool = new int[playerAmount];
 
 		//TODO 亂數位置
 		for (int i = 0; i < nameList.size(); i++) {
 			players[i] = new Player(nameList.get(i), INIT_MONEY[nameList.size() - 3]);
 		}
+	}
+
+	public int getTurnAmount() {
+		return 11 - players.length;
+	}
+
+	public String getNowPlayer() {
+		return players[nowPlayer].name;
+	}
+
+	public int getNowPrice() {
+		return nowPrice;
+	}
+
+	public int[] getPool() {
+		int[] result = new int[pool.size()];
+
+		for (int i = 0; i < result.length; i++) {
+			result[i] = pool.get(i);
+		}
+
+		return result;
 	}
 }
