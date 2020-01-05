@@ -21,8 +21,10 @@ public class GameData {
 	/** 紀錄 allMoney 出到第幾張 */
 	private int moneyIndex;
 
-	private int nowPrice;
+	private boolean bidMode = true;
+	private int nowTurn;
 	private int nowPlayer;
+	private int nowPrice;
 
 	public GameData(List<String> nameList) {
 		this(nameList, true);
@@ -36,12 +38,28 @@ public class GameData {
 
 		//TODO 亂數位置
 		for (int i = 0; i < nameList.size(); i++) {
-			players[i] = new Player(nameList.get(i), INIT_MONEY[nameList.size() - 3]);
+			players[i] = new Player(nameList.get(i), getInitMoney());
 		}
+	}
+
+	public int getPlayerAmount() {
+		return players.length;
 	}
 
 	public int getTurnAmount() {
 		return 11 - players.length;
+	}
+
+	public int getInitMoney() {
+		return INIT_MONEY[players.length - 3];
+	}
+
+	public boolean isBidlMode() {
+		return bidMode;
+	}
+
+	public int getNowTurn() {
+		return nowTurn;
 	}
 
 	public String getNowPlayer() {
