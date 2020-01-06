@@ -6,7 +6,13 @@ public class Player {
 	public final String name;
 
 	private boolean pass;
+
+	/** 紀錄拍賣階段的金錢 */
 	private int money;
+
+	/** 紀錄賣房子獲得的金額總和 **/
+	private int income;
+
 	private int bidPrice;
 	private int sellHouse;
 	private ArrayList<Integer> ownHouse = new ArrayList<>();
@@ -25,6 +31,16 @@ public class Player {
 	/** 非最高出價者，pass 時要退還喊價金額 */
 	public void returnBid(boolean floorMode) {
 		money = money + (int)(floorMode ? Math.floor(bidPrice / 2.0) : Math.ceil(bidPrice / 2.0));
+	}
+
+	public void purchase(int house) {
+		ownHouse.add(house);
+	}
+
+	public void sell(Integer house, int price) {
+		//house 必須用大 int，這樣在做 remove() 的時候才會是 remove 值而非 index
+		ownHouse.remove(house);
+		income += price;
 	}
 
 	public boolean isPass() {
@@ -47,5 +63,13 @@ public class Player {
 	}
 	public ArrayList<Integer> getOwnHouse() {
 		return ownHouse;
+	}
+	/**
+	 * 拍賣階段剩餘的金額、加上販賣階段的收入。
+	 * <p>
+	 * 遊戲結束時是以此作第一階段的排名依據。
+	 */
+	public int getTotalMoney() {
+		return money + income;
 	}
 }
