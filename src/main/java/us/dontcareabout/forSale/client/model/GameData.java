@@ -2,6 +2,7 @@ package us.dontcareabout.forSale.client.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class GameData {
@@ -16,11 +17,8 @@ public class GameData {
 	private final int[] allHouse = new int[CARD_AMOUNT];
 	private final int[] allMoney = new int[CARD_AMOUNT];
 
-	/** 紀錄 allHouse 出到第幾張 */
-	private int houseIndex;
-
-	/** 紀錄 allMoney 出到第幾張 */
-	private int moneyIndex;
+	/** 紀錄 allHouse / allMoney 出到第幾張 */
+	private int cardIndex;
 
 	private boolean bidMode = true;
 	private int nowTurn;
@@ -80,7 +78,7 @@ public class GameData {
 
 		return result;
 	}
-	
+
 	public int getPoolSize() {
 		return pool.size();
 	}
@@ -119,12 +117,56 @@ public class GameData {
 			if (nowTurn < getTurnAmount()) {
 				newBidTurn();
 			} else {
-				bidMode = false;
-				newSellTurn();
+				prepareSellMode();
 			}
 		}
 
 		return new BidRecord(player.name, price, house, refund);
+	}
+
+	public SellRecord[] sell(HashMap<String, Integer> houseMap) {
+		//相對於 houseMap 的反向 hash map
+		//houseMap 當中的 value 值是可以重複的（例如 AI 都亂出 30）
+		//所以需要下面的檢查校正然後才能丟進 inverse
+		HashMap<Integer, String> inverse = new HashMap<>();
+
+		for (String playerName : houseMap.keySet()) {
+			ArrayList<Integer> ownHouse = players[findPlayer(playerName)].getOwnHouse();
+			int house = houseMap.get(playerName);
+			//如果要賣的房子不是自己擁有的房子，就自動校正成最小的（AI.sell()）
+			house = ownHouse.contains(house) ? house : ownHouse.get(0);
+			inverse.put(house, playerName);
+		}
+
+		ArrayList<Integer> houses = new ArrayList<>(inverse.keySet());
+		Collections.sort(houses);
+
+		SellRecord[] result = new SellRecord[players.length];
+		int index = 0;
+
+		for (Integer house : houses) {
+			String playerName = inverse.get(house);
+			players[findPlayer(playerName)].sell(house, pool.get(index));
+			result[index] = new SellRecord(playerName, house, pool.get(index));
+			index++;
+		}
+
+		if (nowTurn < getTurnAmount()) {
+			pool.clear();
+			newSellTurn();
+		}
+
+		return result;
+	}
+
+	private int findPlayer(String playerName) {
+		for (int i = 0; i < players.length; i++) {
+			if (playerName.equals(players[i].name)) {
+				return i;
+			}
+		}
+
+		return 0;	//不應該發生
 	}
 
 	private int nextBidPlayer() {
@@ -152,13 +194,24 @@ public class GameData {
 		Util.shuffle(allMoney);
 	}
 
+	private void prepareSellMode() {
+		bidMode = false;
+		nowTurn = 0;
+		cardIndex = 0;
+		newSellTurn();
+
+		for (int i = 0; i < players.length; i++) {
+			Collections.sort(players[i].getOwnHouse());
+		}
+	}
+
 	private void newBidTurn() {
 		nowTurn++;
 		nowPrice = 0;
 
 		for (int i = 0; i < players.length; i++) {
-			pool.add(allHouse[houseIndex]);
-			houseIndex++;
+			pool.add(allHouse[cardIndex]);
+			cardIndex++;
 		}
 
 		Collections.sort(pool);
@@ -169,6 +222,13 @@ public class GameData {
 	}
 
 	private void newSellTurn() {
-		//TODO
+		nowTurn++;
+
+		for (int i = 0; i < players.length; i++) {
+			pool.add(allMoney[cardIndex]);
+			cardIndex++;
+		}
+
+		Collections.sort(pool);
 	}
 }
