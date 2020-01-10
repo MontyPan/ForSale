@@ -35,13 +35,13 @@ public class GameData {
 		this.floorMode = floorMode;
 		int playerAmount = nameList.size();
 		players = new Player[playerAmount];
-		prepare();
-		newBidTurn();
 
-		//TODO 亂數位置
 		for (int i = 0; i < nameList.size(); i++) {
 			players[i] = new Player(nameList.get(i), getInitMoney());
 		}
+
+		prepare();
+		newBidTurn();	//必須在 players[] init 之後才能執行
 	}
 
 	public int getPlayerAmount() {
@@ -68,6 +68,9 @@ public class GameData {
 		return nowPrice;
 	}
 
+	/**
+	 * 如果只是要取得 pool 剩餘牌數，請用改用效率較佳的 {@link #getPoolSize()}
+	 */
 	public int[] getPool() {
 		int[] result = new int[pool.size()];
 
@@ -77,39 +80,61 @@ public class GameData {
 
 		return result;
 	}
+	
+	public int getPoolSize() {
+		return pool.size();
+	}
 
 	public boolean isBidlMode() {
 		return bidMode;
 	}
 
-	public boolean isBidEnd() {
-		return pool.size() == 0;
-	}
-
+	/**
+	 * <b>注意</b>：會改變 {@link #nowPlayer} 與 {@link #pool} 的值
+	 */
 	public BidRecord bid(int price) {
 		Player player = players[nowPlayer];
 
 		if (price - player.getBidPrice() > player.getMoney()) { price = 0; }
 		if (price < nowPrice + 1) { price = 0; }
 
+		nowPlayer = nextBidPlayer();
+
 		if (price >= nowPrice + 1) {
 			player.bid(price);
 			nowPrice = price;
-			nowPlayer = (nowPlayer + 1) % players.length;
 			return new BidRecord(player.name, nowPrice, 0, 0);
 		}
 
 		//會到這邊就是 pass 的狀況
+		//先拿走 pool 的房子
 		int house = pool.remove(0);
 		player.purchase(house);
 
 		//最後一個 pass（該拍賣回合結束）不會退錢
-		int refund = isBidEnd() ? 0 : player.refund(floorMode);
+		int refund = getPoolSize() == 0 ? 0 : player.refund(floorMode);
 
 		//這裡也是觸發下一個回合的時機點，為了簡潔起見在這裡處理
-		//TODO
+		if (getPoolSize() == 0) {
+			if (nowTurn < getTurnAmount()) {
+				newBidTurn();
+			} else {
+				bidMode = false;
+				newSellTurn();
+			}
+		}
 
 		return new BidRecord(player.name, price, house, refund);
+	}
+
+	private int nextBidPlayer() {
+		for (int i = 1; i < players.length; i++) {
+			if (!players[(nowPlayer + i) % players.length].isPass()) {
+				return (nowPlayer + i) % players.length;
+			}
+		}
+
+		return nowPlayer;
 	}
 
 	private void prepare() {
@@ -128,11 +153,22 @@ public class GameData {
 	}
 
 	private void newBidTurn() {
-		for (int i = houseIndex; i < players.length; i++) {
-			pool.add(allHouse[i]);
+		nowTurn++;
+		nowPrice = 0;
+
+		for (int i = 0; i < players.length; i++) {
+			pool.add(allHouse[houseIndex]);
+			houseIndex++;
 		}
 
-		houseIndex += players.length;
 		Collections.sort(pool);
+
+		for (Player player : players) {
+			player.clearBid();
+		}
+	}
+
+	private void newSellTurn() {
+		//TODO
 	}
 }
