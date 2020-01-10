@@ -14,7 +14,6 @@ public class Player {
 	private int income;
 
 	private int bidPrice;
-	private int sellHouse;
 	private ArrayList<Integer> ownHouse = new ArrayList<>();
 
 	public Player(String name, int money) {
@@ -59,12 +58,6 @@ public class Player {
 	}
 	public int getBidPrice() {
 		return bidPrice;
-	}
-	public int getSellHouse() {
-		return sellHouse;
-	}
-	public void setSellHouse(int sellHouse) {
-		this.sellHouse = sellHouse;
 	}
 	public ArrayList<Integer> getOwnHouse() {
 		return ownHouse;
