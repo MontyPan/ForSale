@@ -37,6 +37,12 @@ public class Player {
 
 	public void purchase(int house) {
 		ownHouse.add(house);
+		pass = true;
+	}
+
+	public void clearBid() {
+		pass = false;
+		bidPrice = 0;
 	}
 
 	public void sell(Integer house, int price) {
@@ -47,9 +53,6 @@ public class Player {
 
 	public boolean isPass() {
 		return pass;
-	}
-	public void setPass(boolean pass) {
-		this.pass = pass;
 	}
 	public int getMoney() {
 		return money;
