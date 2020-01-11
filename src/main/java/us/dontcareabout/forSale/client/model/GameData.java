@@ -9,9 +9,6 @@ public class GameData {
 	private static final int[] INIT_MONEY = {18, 18, 14, 14};
 	private static final int CARD_AMOUNT = 30;
 
-	/** pass 時是否返回向下取整的金額 */
-	public final boolean floorMode;
-
 	private final Player[] players;
 	private final ArrayList<Integer> pool = new ArrayList<>();
 	private final int[] allHouse = new int[CARD_AMOUNT];
@@ -25,11 +22,6 @@ public class GameData {
 	private int nowPrice;
 
 	public GameData(List<String> nameList) {
-		this(nameList, true);
-	}
-
-	public GameData(List<String> nameList, boolean floorMode) {
-		this.floorMode = floorMode;
 		int playerAmount = nameList.size();
 		players = new Player[playerAmount];
 
@@ -105,7 +97,7 @@ public class GameData {
 		player.purchase(house);
 
 		//最後一個 pass（該拍賣回合結束）不會退錢
-		int refund = getPoolSize() == 0 ? 0 : player.refund(floorMode);
+		int refund = getPoolSize() == 0 ? 0 : player.refund();
 
 		//這裡也是觸發下一個回合的時機點，為了簡潔起見在這裡處理
 		if (getPoolSize() == 0) {

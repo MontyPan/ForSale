@@ -28,8 +28,8 @@ public class Player {
 	}
 
 	/** 非最高出價者，pass 時要退還喊價金額 */
-	public int refund(boolean floorMode) {
-		int result = (int)(floorMode ? Math.floor(bidPrice / 2.0) : Math.ceil(bidPrice / 2.0));
+	public int refund() {
+		int result = (int)Math.floor(bidPrice / 2.0);
 		money = money + result;
 		return result;
 	}
