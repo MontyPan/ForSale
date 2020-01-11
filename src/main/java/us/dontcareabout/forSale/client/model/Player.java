@@ -67,7 +67,7 @@ public class Player {
 	 * <p>
 	 * 遊戲結束時是以此作第一階段的排名依據。
 	 */
-	public int getTotalMoney() {
+	public int getProfit() {
 		return money + income;
 	}
 }
