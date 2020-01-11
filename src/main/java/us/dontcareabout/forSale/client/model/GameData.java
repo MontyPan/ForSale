@@ -7,12 +7,11 @@ import java.util.List;
 
 public class GameData {
 	private static final int[] INIT_MONEY = {18, 18, 14, 14};
-	private static final int CARD_AMOUNT = 30;
 
 	private final Player[] players;
 	private final ArrayList<Integer> pool = new ArrayList<>();
-	private final int[] allHouse = new int[CARD_AMOUNT];
-	private final int[] allMoney = new int[CARD_AMOUNT];
+	private final int[] allHouse;
+	private final int[] allMoney;
 
 	/** 紀錄 allHouse / allMoney 出到第幾張 */
 	private int cardIndex;
@@ -21,15 +20,16 @@ public class GameData {
 	private int nowPlayer;
 	private int nowPrice;
 
-	public GameData(List<String> nameList) {
+	public GameData(List<String> nameList, int[] houseDeck, int[] moneyDeck) {
 		int playerAmount = nameList.size();
 		players = new Player[playerAmount];
+		allHouse = houseDeck;
+		allMoney = moneyDeck;
 
 		for (int i = 0; i < nameList.size(); i++) {
 			players[i] = new Player(nameList.get(i), getInitMoney());
 		}
 
-		prepare();
 		newBidTurn();	//必須在 players[] init 之後才能執行
 	}
 
@@ -164,21 +164,6 @@ public class GameData {
 		}
 
 		return nowPlayer;
-	}
-
-	private void prepare() {
-		for (int i = 0; i < CARD_AMOUNT; i++) {
-			allHouse[i] = i + 1;
-		}
-
-		Util.shuffle(allHouse);
-
-		for (int i = 1; i < CARD_AMOUNT / 2; i++) {
-			allMoney[i * 2] = i + 1;
-			allMoney[i * 2 + 1] = i + 1;
-		}
-
-		Util.shuffle(allMoney);
 	}
 
 	private void prepareSellMode() {

@@ -13,6 +13,10 @@ public class GameMaster {
 	private HashMap<Integer, SellRecord[]> sellRecords = new HashMap<>();
 
 	GameMaster(ArrayList<AI> aiList) {
+		this(aiList, Util.genHouseDeck(), Util.genMoneyDeck());
+	}
+
+	GameMaster(ArrayList<AI> aiList, int[] houseDeck, int[] moneyDeck) {
 		ArrayList<String> players = new ArrayList<>();
 
 		for (int i = 0; i < aiList.size(); i++) {
@@ -22,7 +26,7 @@ public class GameMaster {
 		}
 
 		Collections.sort(players);
-		game = new GameData(players);
+		game = new GameData(players, houseDeck, moneyDeck);
 	}
 
 	public void start() {
