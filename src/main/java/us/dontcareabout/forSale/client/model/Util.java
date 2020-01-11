@@ -42,4 +42,23 @@ public class Util {
 		shuffle(result);
 		return result;
 	}
+
+	public static String toString(BidRecord br) {
+		StringBuilder result = new StringBuilder(br.player + "\t");
+
+		if (br.isPass()) {
+			result.append("pass，得到 " + br.house + "，取回 " + br.returnMoney);
+		} else {
+			result.append("出價 " + br.price);
+		}
+
+		return result.toString();
+	}
+
+	public static String toString(SellRecord sr) {
+		StringBuilder builder = new StringBuilder()
+			.append(sr.player).append("\t賣出 ").append(sr.house)
+			.append("\t得到 ").append(sr.money);
+		return builder.toString();
+	}
 }
