@@ -20,7 +20,6 @@ public class GameData {
 	/** 紀錄 allHouse / allMoney 出到第幾張 */
 	private int cardIndex;
 
-	private boolean bidMode = true;
 	private int nowTurn;
 	private int nowPlayer;
 	private int nowPrice;
@@ -81,10 +80,6 @@ public class GameData {
 
 	public int getPoolSize() {
 		return pool.size();
-	}
-
-	public boolean isBidlMode() {
-		return bidMode;
 	}
 
 	/**
@@ -195,7 +190,6 @@ public class GameData {
 	}
 
 	private void prepareSellMode() {
-		bidMode = false;
 		nowTurn = 0;
 		cardIndex = 0;
 		newSellTurn();
