@@ -10,8 +10,8 @@ public class GameData {
 
 	private final Player[] players;
 	private final ArrayList<Integer> pool = new ArrayList<>();
-	private final int[] allHouse;
-	private final int[] allMoney;
+	private final int[] houseDeck;
+	private final int[] moneyDeck;
 
 	/** 紀錄 allHouse / allMoney 出到第幾張 */
 	private int cardIndex;
@@ -23,8 +23,8 @@ public class GameData {
 	public GameData(List<String> nameList, int[] houseDeck, int[] moneyDeck) {
 		int playerAmount = nameList.size();
 		players = new Player[playerAmount];
-		allHouse = houseDeck;
-		allMoney = moneyDeck;
+		this.houseDeck = houseDeck;
+		this.moneyDeck = moneyDeck;
 
 		for (int i = 0; i < nameList.size(); i++) {
 			players[i] = new Player(nameList.get(i), getInitMoney());
@@ -181,7 +181,7 @@ public class GameData {
 		nowPrice = 0;
 
 		for (int i = 0; i < players.length; i++) {
-			pool.add(allHouse[cardIndex]);
+			pool.add(houseDeck[cardIndex]);
 			cardIndex++;
 		}
 
@@ -196,7 +196,7 @@ public class GameData {
 		nowTurn++;
 
 		for (int i = 0; i < players.length; i++) {
-			pool.add(allMoney[cardIndex]);
+			pool.add(moneyDeck[cardIndex]);
 			cardIndex++;
 		}
 
