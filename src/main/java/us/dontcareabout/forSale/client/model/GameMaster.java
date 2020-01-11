@@ -89,6 +89,13 @@ public class GameMaster {
 		return sellRecords;
 	}
 
+	/**
+	 * @see GameData#getResult()
+	 */
+	public GameResult[] getGameResult() {
+		return game.getResult();
+	}
+
 	private AI nowPlayer() {
 		return aiMap.get(game.getNowPlayer());
 	}

@@ -1,6 +1,7 @@
 package us.dontcareabout.forSale.client.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +144,20 @@ public class GameData {
 			newSellTurn();
 		}
 
+		return result;
+	}
+
+	/**
+	 * @return 各玩家的最終金錢狀況，並透過 array index 紀錄排名，index 越小名次越高。
+	 */
+	public GameResult[] getResult() {
+		GameResult[] result = new GameResult[players.length];
+
+		for (int i = 0; i < result.length; i++) {
+			result[i] = new GameResult(players[i].name, players[i].getProfit(), players[i].getMoney());
+		}
+
+		Arrays.sort(result);
 		return result;
 	}
 
