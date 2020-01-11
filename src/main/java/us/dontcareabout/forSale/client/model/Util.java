@@ -61,4 +61,8 @@ public class Util {
 			.append("\t得到 ").append(sr.money);
 		return builder.toString();
 	}
+
+	public static String toString(GameResult gr) {
+		return gr.name + "\t" + gr.profit + " (" + gr.balance + ")";
+	}
 }
