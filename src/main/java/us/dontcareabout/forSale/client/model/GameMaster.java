@@ -47,13 +47,13 @@ public class GameMaster {
 				int price = nowPlayer().bid(game.getPool(), game.getNowPrice());
 				BidRecord br = game.bid(price);
 				brList.add(br);
-
 				for (AI ai : aiMap.values()) { ai.bidCourse(br); }
 
 				//剩下一個人還沒 pass，自動讓他 pass 然後換下一個回合
 				if (game.getPoolSize() == 1) {
 					br = game.bid(0);
 					brList.add(br);
+					for (AI ai : aiMap.values()) { ai.bidCourse(br); }
 					break;
 				}
 			}
