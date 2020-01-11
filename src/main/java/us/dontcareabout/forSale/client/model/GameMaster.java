@@ -41,7 +41,7 @@ public class GameMaster {
 			ArrayList<BidRecord> brList = new ArrayList<>();
 			bidRecords.put(i, brList);
 
-			for (AI ai : aiMap.values()) { ai.newBidTurn(i, pool); };
+			for (AI ai : aiMap.values()) { ai.newBidTurn(i, pool.clone()); };
 
 			while(true) {
 				int price = nowPlayer().bid(game.getPool(), game.getNowPrice());
@@ -73,7 +73,7 @@ public class GameMaster {
 			sellRecords.put(i, srArray);
 
 			for (SellRecord sr : srArray) {
-				aiMap.get(sr.player).sellResult(srArray);
+				aiMap.get(sr.player).sellResult(srArray.clone());
 			}
 		}
 	}
