@@ -30,8 +30,11 @@ public class GameMaster {
 	}
 
 	public void start() {
-		for (AI ai : aiMap.values()) {
-			ai.gameInit(game.getPlayerAmount(), game.getTurnAmount(), game.getInitMoney());
+		for (String name : aiMap.keySet()) {
+			aiMap.get(name).gameInit(
+				name, game.getPlayerAmount(),
+				game.getTurnAmount(), game.getInitMoney()
+			);
 		}
 
 		//拍賣階段

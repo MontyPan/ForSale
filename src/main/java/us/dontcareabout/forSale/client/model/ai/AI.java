@@ -1,15 +1,17 @@
 package us.dontcareabout.forSale.client.model.ai;
 
 import us.dontcareabout.forSale.client.model.BidRecord;
+import us.dontcareabout.forSale.client.model.Player;
 import us.dontcareabout.forSale.client.model.SellRecord;
 
 public interface AI {
 	/**
+	 * @param myName 在遊戲中的名稱，會對應到 {@link BidRecord#player}、{@link SellRecord#player}、{@link Player#name}。
 	 * @param playerAmount 玩家總數
 	 * @param turnAmount 拍賣 / 販售模式有幾個回合
 	 * @param initMoney 初始金額
 	 */
-	void gameInit(int playerAmount, int turnAmount, int initMoney);
+	void gameInit(String myName, int playerAmount, int turnAmount, int initMoney);
 
 	/**
 	 * @param pool 回合初始時的房屋清單
