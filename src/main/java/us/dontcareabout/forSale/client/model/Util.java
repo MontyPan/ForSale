@@ -1,5 +1,7 @@
 package us.dontcareabout.forSale.client.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Util {
@@ -65,4 +67,44 @@ public class Util {
 	public static String toString(GameResult gr) {
 		return gr.name + "\t" + gr.profit + " (" + gr.balance + ")";
 	}
+
+	// ======== 從 openhome.cc 幹來的 permutation 寫法 ======== //
+	public static <T> List<List<T>> permutation(List<T> list) {
+		List<List<T>> result = new ArrayList<>();
+
+		if(list.isEmpty()) {
+			result.add(new ArrayList<T>());
+			return result;
+		}
+
+		for (List<T> lt : allRotated(list)) {
+			for (List<T> tailPl : permutation(lt.subList(1, lt.size()))) {
+				List<T> pl = new ArrayList<>();
+				pl.add(lt.get(0));
+				pl.addAll(tailPl);
+				result.add(pl);
+			}
+		}
+
+		return result;
+	}
+
+	private static <T> List<T> rotatedTo(int i, List<T> list) {
+		List<T> result = new ArrayList<>();
+		result.add(list.get(i));
+		result.addAll(list.subList(0, i));
+		result.addAll(list.subList(i + 1, list.size()));
+		return result;
+	}
+
+	private static <T> List<List<T>> allRotated(List<T> list) {
+		List<List<T>> result = new ArrayList<>();
+
+		for (int i = 0; i < list.size(); i++) {
+			result.add(rotatedTo(i, list));
+		}
+
+		return result;
+	}
+	// ================ //
 }
